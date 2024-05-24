@@ -25,9 +25,5 @@ namespace CarWorkshop.Application.Services
             await _carWorkshopRepository.Create(carWorkshop);
         }
 
-        public Task Create(Domain.Entities.CarWorkshop carWorkshop)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CarWorkshop.Application.CarWorkshop;
 using CarWorkshop.Application.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CarWorkshop.MVC.Controllers
 {
@@ -19,6 +20,10 @@ namespace CarWorkshop.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CarWorkshopDto carWorkshop)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
             await _carWorkshopService.Create(carWorkshop);
             return RedirectToAction(nameof(Create));
         }
