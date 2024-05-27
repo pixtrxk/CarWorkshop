@@ -1,5 +1,8 @@
 ﻿using CarWorkshop.Application.CarWorkshop;
-using CarWorkshop.Application.Services;
+using CarWorkshop.Application.CarWorkshop.Commands.CreateCarWorkshop;
+using CarWorkshop.Application.CarWorkshop.Queries.GetAllCarWorkshops;
+using CarWorkshop.Application.CarWorkshop.Queries.GetCarWorkshopByEncodedName;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
@@ -7,25 +10,36 @@ namespace CarWorkshop.MVC.Controllers
 {
     public class CarWorkshopController : Controller
     {
-        private readonly ICarWorkshopService _carWorkshopService;
-        public CarWorkshopController(ICarWorkshopService carWorkshopService)
+        private readonly IMediator _mediator;
+        public CarWorkshopController(IMediator mediator)
         {
-            _carWorkshopService = carWorkshopService;
+            _mediator = mediator;
         }
 
+        public async Task<IActionResult> Index()
+        {
+            var carWorkshop = await _mediator.Send(new GetAllCarWorkshopsQuery());
+            return View(carWorkshop);
+        }
         public IActionResult Create()
         {
             return View();
         }
+        [Route("CarWorkshop/{encodedName}/Details")]
+        public async Task<IActionResult> Details(string encodedName)
+        {
+            var dto = await _mediator.Send(new GetCarWorkshopByEncodedNameQuery(encodedName));
+            return View(dto);
+        }
         [HttpPost]
-        public async Task<IActionResult> Create(CarWorkshopDto carWorkshop)
+        public async Task<IActionResult> Create(CreateCarWorkshopCommand command)
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(command);
             }
-            await _carWorkshopService.Create(carWorkshop);
-            return RedirectToAction(nameof(Create));
+            await _mediator.Send(command);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CarWorkshop.Application.CarWorkshop
+namespace CarWorkshop.Application.CarWorkshop.Commands.CreateCarWorkshop
 {
-	public class CarWorkshopDtoValidator:AbstractValidator<CarWorkshopDto>
-	{
-        public CarWorkshopDtoValidator(ICarWorkshopRepository repository)
+    public class CreateCarWorkshopCommandValidator : AbstractValidator<CreateCarWorkshopCommand>
+    {
+        public CreateCarWorkshopCommandValidator(ICarWorkshopRepository repository)
         {
             RuleFor(c => c.Name)
                 .NotEmpty()
@@ -23,7 +23,7 @@ namespace CarWorkshop.Application.CarWorkshop
                     {
                         context.AddFailure($"{value} is not unique");
                     }
-                });           
+                });
 
             RuleFor(c => c.Description)
                 .NotEmpty();
