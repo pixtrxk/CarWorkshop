@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using CarWorkshop.Application.CarWorkshop;
 using CarWorkshop.Application.CarWorkshop.Commands.CreateCarWorkshop;
+using CarWorkshop.Application.CarWorkshop.Commands.DeleteCarWorkshop;
 using CarWorkshop.Application.CarWorkshop.Commands.EditCarWorkshop;
 using CarWorkshop.Application.CarWorkshop.Queries.GetAllCarWorkshops;
 using CarWorkshop.Application.CarWorkshop.Queries.GetCarWorkshopByEncodedName;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CarWorkshop.MVC.Controllers
 {
@@ -30,6 +32,12 @@ namespace CarWorkshop.MVC.Controllers
         {
             return View();
         }
+        public async Task<IActionResult> Delete(string encodedName, DeleteCarWorkshopCommand command)
+        {
+            await _mediator.Send(command);
+            return RedirectToAction(nameof(Index));
+        }
+
         [Route("CarWorkshop/{encodedName}/Details")]
         public async Task<IActionResult> Details(string encodedName)
         {
@@ -47,21 +55,13 @@ namespace CarWorkshop.MVC.Controllers
         [HttpPost]
         [Route("CarWorkshop/{encodedName}/Edit")]
         public async Task<IActionResult> Edit(string encodedName, EditCarWorkshopCommand command)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(command);
-            }
+        {            
             await _mediator.Send(command);
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
         public async Task<IActionResult> Create(CreateCarWorkshopCommand command)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(command);
-            }
+        {            
             await _mediator.Send(command);
             return RedirectToAction(nameof(Index));
         }

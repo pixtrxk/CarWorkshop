@@ -34,5 +34,11 @@ namespace CarWorkshop.Infrastructure.Repositories
 
         public Task<Domain.Entities.CarWorkshop?> GetByName(string name)
             =>	_dbcontext.CarWorkshops.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
+
+        public async Task Delete(Domain.Entities.CarWorkshop carWorkshop)
+        {
+            _dbcontext.Remove(carWorkshop);
+            await _dbcontext.SaveChangesAsync();
+        }
 	}
 }
